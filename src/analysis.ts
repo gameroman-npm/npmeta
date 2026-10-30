@@ -22,7 +22,7 @@ function analyzeExports(
   // Prevent infinite recursion
   if (depth > 10) return result;
 
-  if (exports === null || exports === undefined) {
+  if (exports == null) {
     return result;
   }
 
@@ -95,10 +95,10 @@ function mergeExportsAnalysis(
   target: ExportsAnalysis,
   source: ExportsAnalysis,
 ): void {
-  target.hasImport = target.hasImport || source.hasImport;
-  target.hasRequire = target.hasRequire || source.hasRequire;
-  target.hasModule = target.hasModule || source.hasModule;
-  target.hasTypes = target.hasTypes || source.hasTypes;
+  target.hasImport ||= source.hasImport;
+  target.hasRequire ||= source.hasRequire;
+  target.hasModule ||= source.hasModule;
+  target.hasTypes ||= source.hasTypes;
 }
 
 type ModuleFormat =
