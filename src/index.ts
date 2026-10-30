@@ -8,6 +8,8 @@ export {
 
 export { parseDependencyVersion } from "./dependency-version";
 
+export { normalizeLicense } from "./normalize";
+
 export {
   splitPackageName,
   getTypesPackageName,

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { it, describe } from "node:test";
 
-import { parseDependencyVersion } from "../dist/index.mjs";
+import { parseDependencyVersion } from "npmeta";
 
 describe("parseDependencyVersion", () => {
   it("returns plain semver ranges without a name", () => {
