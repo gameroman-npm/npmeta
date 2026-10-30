@@ -1,3 +1,5 @@
+export { isBinaryOnlyPackage } from "./binary-detection";
+
 export {
   isCreatePackage,
   getCreatePackageName,
