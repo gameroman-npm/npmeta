@@ -6,4 +6,11 @@ function splitPackageName(packageName: string): { org: string; name: string } {
   return { org, name };
 }
 
-export { splitPackageName };
+function getTypesPackageName(packageName: string): string {
+  if (packageName.startsWith("@")) {
+    return `@types/${packageName.slice(1).replace("/", "__")}`;
+  }
+  return `@types/${packageName}`;
+}
+
+export { splitPackageName, getTypesPackageName };
