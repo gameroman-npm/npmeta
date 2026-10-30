@@ -1,1 +1,5 @@
-export { isCreatePackage } from "./is-create-package";
+export {
+  isCreatePackage,
+  getCreatePackageName,
+  getCreateShortName,
+} from "./create-package";
