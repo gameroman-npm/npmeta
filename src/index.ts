@@ -6,6 +6,12 @@ export {
   getCreateShortName,
 } from "./create-package";
 
-export { splitPackageName, getTypesPackageName } from "./package-name";
+export { parseDependencyVersion } from "./dependency-version";
+
+export {
+  splitPackageName,
+  getTypesPackageName,
+  encodePackageName,
+} from "./package-name";
 
 export { parsePackageSpec } from "./package-spec";

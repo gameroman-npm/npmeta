@@ -13,4 +13,8 @@ function getTypesPackageName(packageName: string): string {
   return `@types/${packageName}`;
 }
 
-export { splitPackageName, getTypesPackageName };
+function encodePackageName(name: string): string {
+  return name.replace("/", "%2F");
+}
+
+export { splitPackageName, getTypesPackageName, encodePackageName };
