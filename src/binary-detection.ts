@@ -1,17 +1,18 @@
 import { isCreatePackage } from "./create-package";
 
+type PackageBinField = string | Record<string, string> | undefined;
+
 interface PackageMetadata {
   name: string;
-  bin?: string | Record<string, string>;
+  bin?: PackageBinField;
   main?: string;
   module?: unknown;
   exports?: unknown;
 }
 
-function hasBin(pkg: Pick<PackageMetadata, "bin">): boolean {
+function hasBin(bin: PackageBinField): boolean {
   return (
-    pkg.bin != null &&
-    (typeof pkg.bin === "string" || Object.keys(pkg.bin).length > 0)
+    bin != null && (typeof bin === "string" || Object.keys(bin).length > 0)
   );
 }
 
@@ -22,7 +23,7 @@ function isBinaryOnlyPackage(pkg: PackageMetadata): boolean {
 
   const hasEntryPoint = !!pkg.main || !!pkg.module || pkg.exports != null;
 
-  return hasBin(pkg) && !hasEntryPoint;
+  return hasBin(pkg.bin) && !hasEntryPoint;
 }
 
 export { isBinaryOnlyPackage, hasBin };
