@@ -7,28 +7,28 @@ describe("parseDependencyVersion", () => {
   it("returns plain semver ranges without a name", () => {
     for (const value of ["^4.2.0", "1.0.0", "*", "latest"]) {
       const { name, range } = parseDependencyVersion(value);
-      assert(name === null);
-      assert(range === value);
+      assert.strictEqual(name, null);
+      assert.strictEqual(range, value);
     }
   });
 
   it("resolves unscoped npm: aliases", () => {
     const { name, range } = parseDependencyVersion("npm:string-width@^4.2.0");
-    assert(name === "string-width");
-    assert(range === "^4.2.0");
+    assert.strictEqual(name, "string-width");
+    assert.strictEqual(range, "^4.2.0");
   });
 
   it("resolves scoped npm: aliases", () => {
     const { name, range } = parseDependencyVersion("npm:@scope/pkg@1.0.0");
-    assert(name === "@scope/pkg");
-    assert(range === "1.0.0");
+    assert.strictEqual(name, "@scope/pkg");
+    assert.strictEqual(range, "1.0.0");
   });
 
   it("resolves npm: aliases without a range", () => {
     for (const value of ["string-width", "@scope/pkg"]) {
       const { name, range } = parseDependencyVersion(`npm:${value}`);
-      assert(name === value);
-      assert(range === null);
+      assert.strictEqual(name, value);
+      assert.strictEqual(range, null);
     }
   });
 
@@ -46,8 +46,8 @@ describe("parseDependencyVersion", () => {
       "user/repo",
     ]) {
       const { name, range } = parseDependencyVersion(value);
-      assert(name === null);
-      assert(range === null);
+      assert.strictEqual(name, null);
+      assert.strictEqual(range, null);
     }
   });
 
@@ -62,8 +62,8 @@ describe("parseDependencyVersion", () => {
       "next",
     ]) {
       const { name, range } = parseDependencyVersion(tag);
-      assert(name === null);
-      assert(range === tag);
+      assert.strictEqual(name, null);
+      assert.strictEqual(range, tag);
     }
   });
 });

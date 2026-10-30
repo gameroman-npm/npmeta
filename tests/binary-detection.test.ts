@@ -5,69 +5,79 @@ import { isBinaryOnlyPackage } from "npmeta";
 
 describe("isBinaryOnlyPackage", () => {
   it("returns true for create-* packages regardless of fields", () => {
-    assert(isBinaryOnlyPackage({ name: "create-vite" }) === true);
-    assert(
-      isBinaryOnlyPackage({ name: "create-vite", main: "./index.js" }) === true,
+    assert.strictEqual(isBinaryOnlyPackage({ name: "create-vite" }), true);
+    assert.strictEqual(
+      isBinaryOnlyPackage({ name: "create-vite", main: "./index.js" }),
+      true,
     );
   });
 
   it("returns true for scoped create-* packages", () => {
-    assert(isBinaryOnlyPackage({ name: "@lit/create-lit" }) === true);
+    assert.strictEqual(isBinaryOnlyPackage({ name: "@lit/create-lit" }), true);
   });
 
   it("returns true for packages with bin but no entry points", () => {
-    assert(
-      isBinaryOnlyPackage({ name: "eslint", bin: "./bin/eslint.js" }) === true,
+    assert.strictEqual(
+      isBinaryOnlyPackage({ name: "eslint", bin: "./bin/eslint.js" }),
+      true,
     );
-    assert(
+    assert.strictEqual(
       isBinaryOnlyPackage({
         name: "typescript",
         bin: { tsc: "./bin/tsc", tsserver: "./bin/tsserver" },
-      }) === true,
+      }),
+      true,
     );
   });
 
   it("returns false for packages with bin and main", () => {
-    assert(
+    assert.strictEqual(
       isBinaryOnlyPackage({
         name: "eslint",
         bin: "./bin/eslint.js",
         main: "./lib/index.js",
-      }) === false,
+      }),
+      false,
     );
   });
 
   it("returns false for packages with bin and module", () => {
-    assert(
+    assert.strictEqual(
       isBinaryOnlyPackage({
         name: "some-pkg",
         bin: "./bin/cli.js",
         module: "./dist/index.mjs",
-      }) === false,
+      }),
+      false,
     );
   });
 
   it("returns false for packages with bin and exports", () => {
-    assert(
+    assert.strictEqual(
       isBinaryOnlyPackage({
         name: "some-pkg",
         bin: "./bin/cli.js",
         exports: { ".": "./dist/index.js" },
-      }) === false,
+      }),
+      false,
     );
   });
 
   it("returns false for packages with no bin and no entry points", () => {
-    assert(isBinaryOnlyPackage({ name: "some-pkg" }) === false);
+    assert.strictEqual(isBinaryOnlyPackage({ name: "some-pkg" }), false);
   });
 
   it("returns false for packages with empty bin object", () => {
-    assert(isBinaryOnlyPackage({ name: "some-pkg", bin: {} }) === false);
+    assert.strictEqual(
+      isBinaryOnlyPackage({ name: "some-pkg", bin: {} }),
+      false,
+    );
   });
 
   it("returns false for library-only packages", () => {
-    assert(
-      isBinaryOnlyPackage({ name: "lodash", main: "./lodash.js" }) === false,
+    assert.strictEqual(
+      isBinaryOnlyPackage({ name: "lodash", main: "./lodash.js" }),
+      false,
     );
   });
 });

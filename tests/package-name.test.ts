@@ -10,33 +10,33 @@ import {
 describe("splitPackageName", () => {
   it("handles unscoped packages", () => {
     const { org, name } = splitPackageName("astro");
-    assert(org === "");
-    assert(name === "astro");
+    assert.strictEqual(org, "");
+    assert.strictEqual(name, "astro");
   });
 
   it("handles scoped packages", () => {
     const { org, name } = splitPackageName("@clack/prompts");
-    assert(org === "@clack");
-    assert(name === "prompts");
+    assert.strictEqual(org, "@clack");
+    assert.strictEqual(name, "prompts");
   });
 });
 
 describe("getTypesPackageName", () => {
   it("handles unscoped package", () => {
-    assert(getTypesPackageName("lodash") === "@types/lodash");
+    assert.strictEqual(getTypesPackageName("lodash"), "@types/lodash");
   });
 
   it("handles scoped package", () => {
-    assert(getTypesPackageName("@nuxt/kit") === "@types/nuxt__kit");
+    assert.strictEqual(getTypesPackageName("@nuxt/kit"), "@types/nuxt__kit");
   });
 });
 
 describe("encodePackageName", () => {
   it("handles unscoped package", () => {
-    assert(encodePackageName("astro") === "astro");
+    assert.strictEqual(encodePackageName("astro"), "astro");
   });
 
   it("handles scoped package", () => {
-    assert(encodePackageName("@clack/prompts") === "@clack%2Fprompts");
+    assert.strictEqual(encodePackageName("@clack/prompts"), "@clack%2Fprompts");
   });
 });

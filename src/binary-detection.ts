@@ -8,19 +8,21 @@ interface PackageMetadata {
   exports?: unknown;
 }
 
+function hasBin(pkg: Pick<PackageMetadata, "bin">): boolean {
+  return (
+    pkg.bin != null &&
+    (typeof pkg.bin === "string" || Object.keys(pkg.bin).length > 0)
+  );
+}
+
 function isBinaryOnlyPackage(pkg: PackageMetadata): boolean {
   if (isCreatePackage(pkg.name)) {
     return true;
   }
 
-  // Has bin but no entry points
-  const hasBin =
-    pkg.bin !== undefined &&
-    (typeof pkg.bin === "string" || Object.keys(pkg.bin).length > 0);
+  const hasEntryPoint = !!pkg.main || !!pkg.module || pkg.exports != null;
 
-  const hasEntryPoint = !!pkg.main || !!pkg.module || !!pkg.exports;
-
-  return hasBin && !hasEntryPoint;
+  return hasBin(pkg) && !hasEntryPoint;
 }
 
-export { isBinaryOnlyPackage };
+export { isBinaryOnlyPackage, hasBin };

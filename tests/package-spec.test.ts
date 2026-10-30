@@ -6,31 +6,31 @@ import { parsePackageSpec } from "npmeta";
 describe("parsePackageSpec", () => {
   it("handles unscoped packages", () => {
     const { name, version } = parsePackageSpec(" astro ");
-    assert(name === "astro");
-    assert(version === undefined);
+    assert.strictEqual(name, "astro");
+    assert.strictEqual(version, undefined);
   });
 
   it("handles scoped packages", () => {
     const { name, version } = parsePackageSpec(" @clack/prompts ");
-    assert(name === "@clack/prompts");
-    assert(version === undefined);
+    assert.strictEqual(name, "@clack/prompts");
+    assert.strictEqual(version, undefined);
   });
 
   it("handles unscoped packages with version", () => {
     const { name, version } = parsePackageSpec(" vite @ 7 ");
-    assert(name === "vite");
-    assert(version === "7");
+    assert.strictEqual(name, "vite");
+    assert.strictEqual(version, "7");
   });
 
   it("handles scoped packages with version", () => {
     const { name, version } = parsePackageSpec(" @biomejs/biome @ 2.5.0 ");
-    assert(name === "@biomejs/biome");
-    assert(version === "2.5.0");
+    assert.strictEqual(name, "@biomejs/biome");
+    assert.strictEqual(version, "2.5.0");
   });
 
   it("handles empty and whitespace-only input", () => {
     const { name, version } = parsePackageSpec(" ");
-    assert(name === "");
-    assert(version === undefined);
+    assert.strictEqual(name, "");
+    assert.strictEqual(version, undefined);
   });
 });
