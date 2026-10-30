@@ -6,4 +6,6 @@ export {
   getCreateShortName,
 } from "./create-package";
 
+export { splitPackageName } from "./package-name";
+
 export { parsePackageSpec } from "./package-spec";
