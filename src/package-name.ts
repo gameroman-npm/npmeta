@@ -1,16 +1,20 @@
-function splitPackageName(packageName: string): { org: string; name: string } {
+function splitPackageName(packageName: string): {
+  org: string;
+  scope: string | null;
+  name: string;
+} {
   const [org = "", name = ""] = packageName.startsWith("@")
     ? packageName.split("/")
     : ["", packageName];
 
-  return { org, name };
+  const scope = org ? org.slice(1) : null;
+
+  return { org, scope, name };
 }
 
 function getTypesPackageName(packageName: string): string {
-  if (packageName.startsWith("@")) {
-    return `@types/${packageName.slice(1).replace("/", "__")}`;
-  }
-  return `@types/${packageName}`;
+  const { scope, name } = splitPackageName(packageName);
+  return scope ? `@types/${scope}__${name}` : `@types/${name}`;
 }
 
 function encodePackageName(name: string): string {

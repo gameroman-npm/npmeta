@@ -57,12 +57,12 @@ describe("getCreateShortName", () => {
     assert.strictEqual(getCreateShortName("@vue/create-app"), "@vue/app");
   });
 
-  it("returns full name if not a create-* package", () => {
-    assert.strictEqual(getCreateShortName("vite"), "vite");
+  it("returns null if not a create-* package", () => {
+    assert.strictEqual(getCreateShortName("vite"), null);
   });
 
-  it("returns full name for scoped package without create- prefix", () => {
-    assert.strictEqual(getCreateShortName("@scope/foo"), "@scope/foo");
+  it("returns null for scoped package without create- prefix", () => {
+    assert.strictEqual(getCreateShortName("@scope/foo"), null);
   });
 
   it("extracts name from create-next-app style packages", () => {

@@ -139,12 +139,11 @@ type PackageExports =
  * Detect the module format of a package based on package.json fields
  */
 function detectModuleFormat(pkg: ExtendedPackageJson): ModuleFormat {
-  const hasExports = pkg.exports != null;
   const hasModule = !!pkg.module;
   const hasMain = !!pkg.main;
 
-  if (!hasExports && !hasModule && !hasMain) {
-    if (hasBin(pkg)) {
+  if (!pkg.exports && !hasModule && !hasMain) {
+    if (hasBin(pkg.bin)) {
       return "binary";
     }
 
@@ -155,7 +154,7 @@ function detectModuleFormat(pkg: ExtendedPackageJson): ModuleFormat {
   const isTypeCommonjs = pkg.type === "commonjs" || !pkg.type;
 
   // Check exports field for dual format indicators
-  if (hasExports && pkg.exports) {
+  if (pkg.exports) {
     const exportInfo = analyzeExports(pkg.exports, isTypeModule);
 
     if (exportInfo.hasImport && exportInfo.hasRequire) {
@@ -214,15 +213,12 @@ function hasBuiltInTypes(pkg: ExtendedPackageJson): boolean {
     return true;
   }
 
-  // Check exports field for types
-  if (pkg.exports) {
-    const exportInfo = analyzeExports(pkg.exports, pkg.type === "module");
-    if (exportInfo.hasTypes) {
-      return true;
-    }
-  }
+  if (!pkg.exports) return false;
 
-  return false;
+  // Check exports field for types
+
+  const exportInfo = analyzeExports(pkg.exports, pkg.type === "module");
+  return exportInfo.hasTypes;
 }
 
 export { detectModuleFormat, hasBuiltInTypes };
