@@ -1,14 +1,5 @@
 import { isCreatePackage } from "./create-package";
-
-type PackageBinField = string | Record<string, string> | undefined;
-
-interface PackageMetadata {
-  name: string;
-  bin?: PackageBinField;
-  main?: string;
-  module?: unknown;
-  exports?: unknown;
-}
+import type { PackageBinField, PackageJson } from "./types";
 
 function hasBin(bin: PackageBinField): boolean {
   return (
@@ -16,8 +7,8 @@ function hasBin(bin: PackageBinField): boolean {
   );
 }
 
-function isBinaryOnlyPackage(pkg: PackageMetadata): boolean {
-  if (isCreatePackage(pkg.name)) {
+function isBinaryOnlyPackage(pkg: PackageJson): boolean {
+  if (pkg.name && isCreatePackage(pkg.name)) {
     return true;
   }
 
@@ -27,3 +18,4 @@ function isBinaryOnlyPackage(pkg: PackageMetadata): boolean {
 }
 
 export { isBinaryOnlyPackage, hasBin };
+export type { PackageBinField };
