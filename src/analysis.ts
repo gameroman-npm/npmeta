@@ -1,4 +1,5 @@
 import { hasBin } from "./binary-detection";
+import type { PackageJson } from "./types";
 
 interface ExportsAnalysis {
   hasImport: boolean;
@@ -8,7 +9,7 @@ interface ExportsAnalysis {
 }
 
 function analyzeExports(
-  exports: PackageExports,
+  exports: unknown,
   isTypeModule: boolean,
   depth = 0,
 ): ExportsAnalysis {
@@ -41,10 +42,6 @@ function analyzeExports(
     } else if (exports.endsWith(".cjs") || exports.endsWith(".cts")) {
       result.hasRequire = true;
     } else if (exports.endsWith(".js")) {
-      // A bare .js file has no format of its own. Node resolves it against the
-      // package's "type" field. Without this, an ESM package that points its
-      // conditions at .js files gives off no ESM signal at all, and a single
-      // .cjs subpath elsewhere in the tree is enough to classify it as CJS.
       if (isTypeModule) {
         result.hasImport = true;
       } else {
@@ -101,44 +98,12 @@ function mergeExportsAnalysis(
   target.hasTypes ||= source.hasTypes;
 }
 
-type ModuleFormat =
-  | "esm"
-  | "cjs"
-  | "dual"
-  | "wasm"
-  | "binary"
-  | "empty"
-  | "unknown";
+type ModuleFormat = "esm" | "cjs" | "dual" | "wasm" | "binary" | "empty";
 
 /**
- * Extended package.json fields
+ * Detect the module format of a package based on `package.json` fields
  */
-interface ExtendedPackageJson {
-  name?: string;
-  version?: string;
-  type?: "module" | "commonjs";
-  main?: string;
-  module?: string;
-  types?: string;
-  typings?: string;
-  exports?: PackageExports;
-  bin?: string | Record<string, string>;
-  engines?: Record<string, string>;
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-  peerDependencies?: Record<string, string>;
-}
-
-type PackageExports =
-  | string
-  | null
-  | { [key: string]: PackageExports }
-  | PackageExports[];
-
-/**
- * Detect the module format of a package based on package.json fields
- */
-function detectModuleFormat(pkg: ExtendedPackageJson): ModuleFormat {
+function detectModuleFormat(pkg: PackageJson): ModuleFormat {
   const hasModule = !!pkg.module;
   const hasMain = !!pkg.main;
 
@@ -151,7 +116,6 @@ function detectModuleFormat(pkg: ExtendedPackageJson): ModuleFormat {
   }
 
   const isTypeModule = pkg.type === "module";
-  const isTypeCommonjs = pkg.type === "commonjs" || !pkg.type;
 
   // Check exports field for dual format indicators
   if (pkg.exports) {
@@ -200,14 +164,10 @@ function detectModuleFormat(pkg: ExtendedPackageJson): ModuleFormat {
     return "esm";
   }
 
-  if (hasMain || isTypeCommonjs) {
-    return "cjs";
-  }
-
-  return "unknown";
+  return "cjs";
 }
 
-function hasBuiltInTypes(pkg: ExtendedPackageJson): boolean {
+function hasBuiltInTypes(pkg: PackageJson): boolean {
   // Check types/typings field
   if (pkg.types || pkg.typings) {
     return true;
