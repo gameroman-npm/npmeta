@@ -3,7 +3,7 @@ function parsePackageSpec(input: string): {
   version?: string;
 } {
   const trimmedInput = input.trim();
-  const atPos = trimmedInput.lastIndexOf("@");
+  const atPos = trimmedInput.indexOf("@", 1);
   if (atPos <= 0) return { name: trimmedInput };
   const name = trimmedInput.slice(0, atPos).trim();
   const version = trimmedInput.slice(atPos + 1).trim();

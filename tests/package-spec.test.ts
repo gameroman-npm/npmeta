@@ -28,6 +28,18 @@ describe("parsePackageSpec", () => {
     assert.strictEqual(version, "2.5.0");
   });
 
+  it("keeps an @ inside the version", () => {
+    const { name, version } = parsePackageSpec("foo@npm:bar@1");
+    assert.strictEqual(name, "foo");
+    assert.strictEqual(version, "npm:bar@1");
+  });
+
+  it("keeps an @ inside the version of a scoped package", () => {
+    const { name, version } = parsePackageSpec("@scope/foo@npm:@scope/bar@1");
+    assert.strictEqual(name, "@scope/foo");
+    assert.strictEqual(version, "npm:@scope/bar@1");
+  });
+
   it("handles a trailing @ without version", () => {
     const { name, version } = parsePackageSpec("react@");
     assert.strictEqual(name, "react");
