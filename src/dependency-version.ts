@@ -1,3 +1,5 @@
+import { parsePackageSpec } from "./package-spec";
+
 /** Parsed result of an npm dependency version value */
 interface ParsedDependencyVersion {
   /** The real package name (different from the dependency key only for aliases) */
@@ -30,27 +32,8 @@ function isNonSemverConstraint(constraint: string): boolean {
 
 function parseDependencyVersion(value: string): ParsedDependencyVersion {
   if (value.startsWith("npm:")) {
-    const aliasBody = value.slice(4); // strip "npm:"
-    // Scoped: @scope/name@range
-    if (aliasBody.startsWith("@")) {
-      const secondAt = aliasBody.indexOf("@", 1);
-      if (secondAt !== -1) {
-        return {
-          name: aliasBody.slice(0, secondAt),
-          range: aliasBody.slice(secondAt + 1),
-        };
-      }
-      return { name: aliasBody, range: null };
-    }
-    // Unscoped: name@range
-    const atIndex = aliasBody.indexOf("@");
-    if (atIndex !== -1) {
-      return {
-        name: aliasBody.slice(0, atIndex),
-        range: aliasBody.slice(atIndex + 1),
-      };
-    }
-    return { name: aliasBody, range: null };
+    const { name, version } = parsePackageSpec(value.slice(4));
+    return { name, range: version ?? null };
   }
 
   if (isNonSemverConstraint(value)) {

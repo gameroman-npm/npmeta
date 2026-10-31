@@ -1,7 +1,7 @@
 export { detectModuleFormat, hasBuiltInTypes } from "./analysis";
 export type { ModuleFormat } from "./analysis";
 
-export { isBinaryOnlyPackage } from "./binary-detection";
+export { isBinaryOnlyPackage, hasBin } from "./binary-detection";
 
 export {
   isCreatePackage,

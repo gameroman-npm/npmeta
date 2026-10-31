@@ -1,20 +1,29 @@
-function splitPackageName(packageName: string): { org: string; name: string } {
+function splitPackageName(packageName: string): {
+  org: string;
+  scope: string | null;
+  name: string;
+} {
   const [org = "", name = ""] = packageName.startsWith("@")
     ? packageName.split("/")
     : ["", packageName];
 
-  return { org, name };
+  const scope = org ? org.slice(1) : null;
+
+  return { org, scope, name };
 }
 
 function getTypesPackageName(packageName: string): string {
-  if (packageName.startsWith("@")) {
-    return `@types/${packageName.slice(1).replace("/", "__")}`;
-  }
-  return `@types/${packageName}`;
+  const { scope, name } = splitPackageName(packageName);
+  return scope ? `@types/${scope}__${name}` : `@types/${name}`;
 }
 
 function encodePackageName(name: string): string {
-  return name.replace("/", "%2F");
+  // Keep the scope's leading "@" readable, but encode everything else so that
+  // untrusted input can't inject path segments, a query or a fragment
+  if (name.startsWith("@")) {
+    return `@${encodeURIComponent(name.slice(1))}`;
+  }
+  return encodeURIComponent(name);
 }
 
 export { splitPackageName, getTypesPackageName, encodePackageName };

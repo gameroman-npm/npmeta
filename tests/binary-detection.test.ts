@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { it, describe } from "node:test";
 
-import { isBinaryOnlyPackage } from "npmeta";
+import { isBinaryOnlyPackage, hasBin } from "npmeta";
 
 describe("isBinaryOnlyPackage", () => {
   it("returns true for create-* packages regardless of fields", () => {
@@ -79,5 +79,20 @@ describe("isBinaryOnlyPackage", () => {
       isBinaryOnlyPackage({ name: "lodash", main: "./lodash.js" }),
       false,
     );
+  });
+});
+
+describe("hasBin", () => {
+  it("returns true when has bin", () => {
+    assert.strictEqual(hasBin("./bin/eslint.js"), true);
+    assert.strictEqual(
+      hasBin({ tsc: "./bin/tsc", tsserver: "./bin/tsserver" }),
+      true,
+    );
+  });
+
+  it("returns false when does not have bin", () => {
+    assert.strictEqual(hasBin(undefined), false);
+    assert.strictEqual(hasBin({}), false);
   });
 });

@@ -1,42 +1,24 @@
-function isCreatePackage(packageName: string): boolean {
-  const baseName = packageName.startsWith("@")
-    ? packageName.split("/")[1]
-    : packageName;
+import { splitPackageName } from "./package-name";
 
-  return (
-    baseName?.startsWith("create-") || packageName.includes("/create-") || false
-  );
+function isCreatePackage(packageName: string): boolean {
+  return splitPackageName(packageName).name.startsWith("create-");
 }
 
 function getCreatePackageName(packageName: string): string {
-  if (!packageName.startsWith("@")) return `create-${packageName}`;
-
-  // Scoped package: @scope/name -> @scope/create-name
-  const slashIndex = packageName.indexOf("/");
-  const scope = packageName.slice(0, slashIndex);
-  const name = packageName.slice(slashIndex + 1);
-  return `${scope}/create-${name}`;
+  const { org, name } = splitPackageName(packageName);
+  return org ? `${org}/create-${name}` : `create-${name}`;
 }
 
-function getCreateShortName(createPackageName: string): string {
-  // create-vite -> vite
-  if (createPackageName.startsWith("create-")) {
-    return createPackageName.slice("create-".length);
+function getCreateShortName(createPackageName: string): string | null {
+  const { org, name } = splitPackageName(createPackageName);
+
+  if (!name.startsWith("create-")) {
+    return name === "create" ? org : null;
   }
 
-  if (!createPackageName.startsWith("@")) return createPackageName;
+  const sliced = name.slice("create-".length);
 
-  // @scope/create -> @scope, @scope/create-foo -> @scope/foo
-  const slashIndex = createPackageName.indexOf("/");
-  const scope = createPackageName.slice(0, slashIndex);
-  const name = createPackageName.slice(slashIndex + 1);
-  if (name === "create") {
-    return scope;
-  }
-  if (name.startsWith("create-")) {
-    return `${scope}/${name.slice("create-".length)}`;
-  }
-  return createPackageName;
+  return org ? `${org}/${sliced}` : sliced;
 }
 
 export { isCreatePackage, getCreatePackageName, getCreateShortName };
