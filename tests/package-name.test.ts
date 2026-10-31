@@ -39,4 +39,18 @@ describe("encodePackageName", () => {
   it("handles scoped package", () => {
     assert.strictEqual(encodePackageName("@clack/prompts"), "@clack%2Fprompts");
   });
+
+  it("encodes every slash", () => {
+    assert.strictEqual(encodePackageName("@a/b/c"), "@a%2Fb%2Fc");
+    assert.strictEqual(
+      encodePackageName("foo/../../-/v1/search"),
+      "foo%2F..%2F..%2F-%2Fv1%2Fsearch",
+    );
+  });
+
+  it("encodes query and fragment characters", () => {
+    assert.strictEqual(encodePackageName("foo?write=1"), "foo%3Fwrite%3D1");
+    assert.strictEqual(encodePackageName("#"), "%23");
+    assert.strictEqual(encodePackageName("%"), "%25");
+  });
 });
