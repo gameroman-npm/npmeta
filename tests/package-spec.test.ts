@@ -28,6 +28,12 @@ describe("parsePackageSpec", () => {
     assert.strictEqual(version, "2.5.0");
   });
 
+  it("handles a trailing @ without version", () => {
+    const { name, version } = parsePackageSpec("react@");
+    assert.strictEqual(name, "react");
+    assert.strictEqual(version, "");
+  });
+
   it("handles empty and whitespace-only input", () => {
     const { name, version } = parsePackageSpec(" ");
     assert.strictEqual(name, "");
