@@ -14,7 +14,12 @@ function getTypesPackageName(packageName: string): string {
 }
 
 function encodePackageName(name: string): string {
-  return name.replace("/", "%2F");
+  // Keep the scope's leading "@" readable, but encode everything else so that
+  // untrusted input can't inject path segments, a query or a fragment
+  if (name.startsWith("@")) {
+    return `@${encodeURIComponent(name.slice(1))}`;
+  }
+  return encodeURIComponent(name);
 }
 
 export { splitPackageName, getTypesPackageName, encodePackageName };
